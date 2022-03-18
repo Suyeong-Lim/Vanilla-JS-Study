@@ -19,7 +19,7 @@ type=module 만 사용하면 CORS 에러가 나는데, lite-server를 사용하�
 
 ### 폴더구조
 
-![folder-structure](/Users/sueyeonglim/workspace/Vanilla-JS-Study/Section01_Search_Form/img/folder-structure.png)
+![folderStructure](./README.assets/folder-structure.png)
 
 - Model
 
@@ -27,16 +27,17 @@ type=module 만 사용하면 CORS 에러가 나는데, lite-server를 사용하�
   - Store - storage 를 받아서 값이 없으면 예외처리 하고 , 있으면 내부 변수로 storage를 저장한다. MVC 패턴에서 Model의 역할을 한다.
 
 - View : 사용자가 볼 수 있는 화면을 관리한다.
+
   - views - View들을 담는 폴더로 모든 View 들이 공통으로 사용하는 부모 View class 파일을 가진다.
   - View - Dom API를 직접적으로 사용하며 관리할 element를 인자로 받아서 관리한다.
   - helpers - Dom API를 직접쓰지 않고 편하게 쓰기 위해 wrapping 해놓은것
 
-> helpers 의 주요 함수들
+    helpers 의 주요 함수들
 
-      1. query Select 함수 **qs**
-    2. querySelectorAll 함수 **qsAll**
-    3. addEvent 함수 **on**
-    4. 상대시간 계산 함수 **formatRelativeDate**
+    1. query Select 함수 qs
+    2. querySelectorAll 함수 qsAll
+    3. addEvent 함수 on
+    4. 상대시간 계산 함수 formatRelativeDate
     5. 지난날짜 계산 함수
     6. 숫자를 올려가면서 아이디를 만들어주는 함수
 

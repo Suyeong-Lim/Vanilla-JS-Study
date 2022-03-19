@@ -139,8 +139,7 @@ this.searchFormView = searchFormView;
 <br/>
 
 ### 검색폼 만들기 - 컨트롤러에 이벤트 위임하기
-💡 Todo : 엔터를 입력하면 검색결과가 보이게하기 
-
+    💡 Todo : 엔터를 입력하면 검색결과가 보이게하기 
 1. 엔터가 입력되면 form에서 submit 이벤트가 발생하게된다. 
 2. 발생된 submit 이벤트에 핸들러를 추가한다.
 3. 이벤트에서 엔터가 입력된 것을 판단한다.
@@ -150,8 +149,7 @@ this.searchFormView = searchFormView;
 <br/>
 
 ### 검색결과 만들기 -동적으로 DOM 만들기 
-💡 Todo : 검색결과가 검색 폼 아래 위치하게 만들기. 
-
+    💡 Todo : 검색결과가 검색 폼 아래 위치하게 만들기. 
 1. html 코드 추가하기
 2. ResultView에서 1 가져오기
 3. 동적으로 만들 html의 틀을 만들기 class Template  
@@ -206,7 +204,8 @@ this.element.style.display = this.originalDisplay;
 return this;
 
 }
-	```
+```
+
 
 위의 코드에서 originalDisplay 를 정의를 안해줬었음 ;;;
 
@@ -215,3 +214,11 @@ this.originalDisplay = this.element.style.display || "";
 ```
 
 originalDisplay 는 element의 처음 스타일값. 스타일 값 없으면 없는걸로 설정
+
+
+### 정리 
+- 뷰 - 눈에 보이는 UI 담당. 돔 조작하여 실제 화면을 렌더링한다. 자신의 역할이 아닌것은 외부로 전달하기 위해 커스텀 이벤트를 발행한다.
+- 모델 - 데이터를 관리한다. 조회/수정/삭제 메소드 또한 제공한다. 뷰 제어시 필요한 상태 변수도 가진다.
+- 컨트롤러 - 뷰와 모델을 이용하여 어플리케이션을 돌아가도록 한다. 스토어의 데이터를 뷰로 전달하거나 뷰에서 보내는 이벤트로 모델의 데이터를 갱신하는 등의 역할을 한다. 
+
+---

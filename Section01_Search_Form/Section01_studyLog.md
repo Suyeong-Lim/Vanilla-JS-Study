@@ -221,4 +221,89 @@ originalDisplay 는 element의 처음 스타일값. 스타일 값 없으면 없�
 - 모델 - 데이터를 관리한다. 조회/수정/삭제 메소드 또한 제공한다. 뷰 제어시 필요한 상태 변수도 가진다.
 - 컨트롤러 - 뷰와 모델을 이용하여 어플리케이션을 돌아가도록 한다. 스토어의 데이터를 뷰로 전달하거나 뷰에서 보내는 이벤트로 모델의 데이터를 갱신하는 등의 역할을 한다. 
 
----
+--- 
+
+### 탭 구현하기
+	💡 Todo
+		- 추천 검색어, 최근 검색어 탭 검색폼 아래 배치
+		- 기본으로 추천 검색어 탭을 선택
+		- 각 탭을 클릭하면 탭 아래 내용 변경					
+
+
+### 동적 탭 UI를 만들기 
+1. 탭을 출력하기 위한 객체가 필요하다. (TabLabel)
+탭에는 추천 검색, 최근 검색 두 가지의 요소가 들어있다
+
+```JS
+const TabLabel = {
+  KEYWORD: "추천 검색어",
+  HISTORY: "최근 검색어",
+};
+```
+
+2. show() 함수를 오버라이드 하여 탭 리스트를 화면에 추가한다. 
+
+```JS
+show() {
+	this.element.innerHTML = this.template.getTabList();
+	super.show();
+}
+```
+
+3. Template 클래스에서 getTabList 를 정의한다. 
+
+```JS
+class Template {
+
+getTabList() {
+
+return `
+	<ul>
+	${Object.entries(TabLabel)
+	.map((it) => {
+	const [tabType, tabLabel] = it;
+	return { tabType, tabLabel };
+	})
+	.map(this._getTab)
+	.join("")}
+	</ul>
+	`;
+}
+
+_getTab({ tabType, tabLabel }) {
+	return `
+	<li data-tab="${tabType}">${tabLabel}</li>
+	`;
+}}
+```
+
+`getTabList` 는 탭 리스트를 만드는 것이고 
+`_getTab` 은 li 탭 하나를 만들어서 반환하는 것이다. 
+
+```JS
+.map((it) => {
+const [tabType, tabLabel] = it;
+```
+
+위 코드에서 보면 일단 it으로 한 요소를 `const [tabType,tabLabel]` 에 해당하도록 할당 해준다. 이를 `{ tabType , tabLabel }` 변수명으로 반환한다. 
+
+	{ tabType = KEYWORD , tabLabel = 추천 검색어 }
+	{ tabType = HISTORY , tabLabel = 최근 검색어 }
+
+이렇게 할당된 객체 결과물을 가지고 하나의 탭을 위한 마크업 문자열을 getTab() 으로 만든다. `.map(this._getTab)`
+객체 하나마다 getTab 을 실행한다.
+
+	❓ getTab 뒤에 왜 ()가 붙지 않을까? (함수 호출과 함수 참조)
+		getTab() 에 인자를 넘겨주지 않았는데 탭타입,탭라벨을 
+		받을 수 있는 이유는?
+
+getTab은 탭 타입과 탭 라벨 돔을 리턴한다. 
+
+
+
+#### 관련 개념 
+- Object entries() 
+	객체가 가지고 있는 모든 프로퍼티를 키와 값 쌍으로 배열 형태로 반환해 준다. 따라서 어떤 프로퍼티와 값으로 이루어졌는지 확인이 가능함
+- Object values()
+	특정 객체를 대상으로 value 값들만 뽑아서 배열로 반환.
+	for in 구문으로 반복한 결과와 동일하다. 

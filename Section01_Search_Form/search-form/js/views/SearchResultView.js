@@ -3,7 +3,7 @@ import View from "./View.js";
 
 export default class SearchResultView extends View {
   constructor() {
-    super(qs("#result-view"));
+    super(qs("#search-result-view"));
     this.template = new Template();
   }
 

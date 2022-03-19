@@ -135,3 +135,83 @@ this.searchFormView = searchFormView;
 
 }
 ```
+
+<br/>
+
+### 검색폼 만들기 - 컨트롤러에 이벤트 위임하기
+💡 Todo : 엔터를 입력하면 검색결과가 보이게하기 
+
+1. 엔터가 입력되면 form에서 submit 이벤트가 발생하게된다. 
+2. 발생된 submit 이벤트에 핸들러를 추가한다.
+3. 이벤트에서 엔터가 입력된 것을 판단한다.
+4.  inputElement로 입력된 값을  ResultView에 전달한다.
+뷰에서 발생하는 이벤트를 수신할 수있는 메소드를 컨트롤러에 생성해서 컨트롤러에서 받아서 다른 뷰로 넘겨준다. 
+
+<br/>
+
+### 검색결과 만들기 -동적으로 DOM 만들기 
+💡 Todo : 검색결과가 검색 폼 아래 위치하게 만들기. 
+
+1. html 코드 추가하기
+2. ResultView에서 1 가져오기
+3. 동적으로 만들 html의 틀을 만들기 class Template  
+4. Template 클래스 안에 DOM을 리턴하는 함수들을 정의한다. 
+5. 컨트롤러에서 show함수가 호출될 때 데이터가 전달되어서 2에서 가져온 element의 innerHTML을 Template 객체 안에 있는 함수를 사용한 DOM이 데이터에 맞게 동적으로 만들어진다. 
+
+
+⭐  데이터를 Model에서 관리하기때문에 **검색결과를 만드는 함수를 정의**해줘야함. 
+-> 검색어가 들어오면 검색 결과를 리턴해주는 역할을 하는 함수를 정의하자 
+검색어는 하나의 스트링 문자열, 검색 결과는 복수 개가 있을 수있으니 배열로 정의한다.
+검색 함수 search는 키워드를 받아서 keyword가 있는 데이터를 filter하여 searchResult에 저장한다.
+
+⭐  **Controller** 에서 submit 이벤트 시 search 함수로 키워드가 넘어가 검색이 되도록 만들었다. search 함수가 실행되면 키워드를 받아서 위에서 만들었던 검색 함수를 호출하여 모델에서 데이터를 검색한다. 
+reset 이벤트가 발생하면 키워드와 검색결과를 초기화시키고 render 를 호출한다.
+
+**render 메소드** =  컨트롤러가 관리하는 뷰들을 화면에 출력하는 기능을 하는 메서드
+
+
+	😱  계속 reset 했을때 reset도 안되고 다시 검색시 검색 결과도 안떠서 왜이러지?? 하면서 찾았는데 
+
+```JS
+export default class View {
+
+	constructor(element) {
+	
+	if (!element) throw "no element";
+	
+	this.element = element;
+	
+	this.originalDisplay = this.element.style.display || "";
+	
+	return this;
+
+}
+
+  
+hide() {
+
+this.element.style.display = "none";
+
+return this;
+
+}
+
+  
+//원래의 display 로 복구하는 역할
+
+show() {
+
+this.element.style.display = this.originalDisplay;
+
+return this;
+
+}
+	```
+
+위의 코드에서 originalDisplay 를 정의를 안해줬었음 ;;;
+
+```JS
+this.originalDisplay = this.element.style.display || "";
+```
+
+originalDisplay 는 element의 처음 스타일값. 스타일 값 없으면 없는걸로 설정

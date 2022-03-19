@@ -7,6 +7,8 @@ export default class View {
     if (!element) throw "no element";
 
     this.element = element;
+    this.originalDisplay = this.element.style.display || "";
+
     return this;
   }
 
@@ -15,8 +17,9 @@ export default class View {
     return this;
   }
 
+  //원래의 display 로 복구하는 역할
   show() {
-    this.element.style.display = this.origidalDeisplay;
+    this.element.style.display = this.originalDisplay;
     return this;
   }
 

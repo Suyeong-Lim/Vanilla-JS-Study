@@ -5,7 +5,13 @@ const tag = "[Controller]";
 export default class Controller {
   constructor(
     store,
-    { searchFormView, searchResultView, tabView, keywordListView }
+    {
+      searchFormView,
+      searchResultView,
+      tabView,
+      keywordListView,
+      historyListView,
+    }
   ) {
     console.log(tag, "constructor");
 
@@ -15,6 +21,7 @@ export default class Controller {
     this.searchResultView = searchResultView;
     this.tabView = tabView;
     this.keywordListView = keywordListView;
+    this.historyListView = historyListView;
 
     this.subscribeViewEvents();
     this.render();
@@ -25,11 +32,13 @@ export default class Controller {
       .on("@submit", (event) => this.search(event.detail.value))
       .on("@reset", () => this.reset());
     this.tabView.on("@change", (e) => this.change(e.detail.value));
+    this.historyListView.on("@remove", (e) =>
+      this.removeHistory(e.detail.value)
+    );
   }
 
   search(keyword) {
     console.log(tag, "search", keyword);
-
     this.store.search(keyword);
     this.render();
   }
@@ -48,6 +57,12 @@ export default class Controller {
     this.render();
   }
 
+  removeHistory(keyword) {
+    console.log(keyword);
+    this.store.removeHistory(keyword);
+    this.render();
+  }
+
   render() {
     if (this.store.searchKeyword.length > 0) {
       return this.renderSearchResult();
@@ -56,15 +71,21 @@ export default class Controller {
     this.tabView.show(this.store.selectedTab);
     if (this.store.selectedTab === TabType.KEYWORD) {
       this.keywordListView.show(this.store.getKeywordList());
+      this.historyListView.hide();
     } else if (this.store.selectedTab === TabType.HISTORY) {
-      console.log("clicked history");
+      this.historyListView.show(this.store.getHistoryList());
+      this.keywordListView.hide();
+    } else {
+      throw "impossible Condition";
     }
     this.searchResultView.hide();
   }
 
   renderSearchResult() {
-    this.tabView.hide();
     this.searchFormView.show(this.store.searchKeyword);
     this.searchResultView.show(this.store.searchResult);
+    this.tabView.hide();
+    this.keywordListView.hide();
+    this.historyListView.hide();
   }
 }

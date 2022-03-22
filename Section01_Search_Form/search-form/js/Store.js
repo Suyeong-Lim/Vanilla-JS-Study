@@ -20,7 +20,17 @@ export default class Store {
   }
 
   getKeywordList() {
-    console.log(this.storage.keywordData);
     return this.storage.keywordData;
+  }
+
+  getHistoryList() {
+    console.log(this.storage.historyData);
+    return this.storage.historyData;
+  }
+
+  removeHistory(removeKeyword) {
+    this.storage.historyData = this.storage.historyData.filter(
+      (history) => history.keyword !== removeKeyword.keyword
+    );
   }
 }

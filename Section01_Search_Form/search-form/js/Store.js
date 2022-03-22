@@ -18,4 +18,9 @@ export default class Store {
       it.name.includes(keyword)
     );
   }
+
+  getKeywordList() {
+    console.log(this.storage.keywordData);
+    return this.storage.keywordData;
+  }
 }

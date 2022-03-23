@@ -33,6 +33,7 @@ export default class Controller {
       .on("@reset", () => this.reset());
     this.tabView.on("@change", (e) => this.change(e.detail.value));
     this.keywordListView.on("@click", (e) => this.search(e.detail.value));
+
     this.historyListView
       .on("@remove", (e) => this.removeHistory(e.detail.value))
       .on("@click", (e) => this.search(e.detail.value));
@@ -58,10 +59,10 @@ export default class Controller {
   }
 
   removeHistory(keyword) {
-    console.log(keyword);
     this.store.removeHistory(keyword);
     this.render();
   }
+
 
   render() {
     if (this.store.searchKeyword.length > 0) {

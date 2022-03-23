@@ -229,15 +229,14 @@ originalDisplay 는 element의 처음 스타일값. 스타일 값 없으면 없�
 		- 기본으로 추천 검색어 탭을 선택
 		- 각 탭을 클릭하면 탭 아래 내용 변경					
 
-
 ### 동적 탭 UI를 만들기 
 1. 탭을 출력하기 위한 객체가 필요하다. (TabLabel)
 탭에는 추천 검색, 최근 검색 두 가지의 요소가 들어있다
 
 ```JS
 const TabLabel = {
-  KEYWORD: "추천 검색어",
-  HISTORY: "최근 검색어",
+KEYWORD: "추천 검색어",
+HISTORY: "최근 검색어",
 };
 ```
 
@@ -281,8 +280,8 @@ _getTab({ tabType, tabLabel }) {
 `_getTab` 은 li 탭 하나를 만들어서 반환하는 것이다. 
 
 ```JS
-.map((it) => {
-const [tabType, tabLabel] = it;
+	.map((it) => {
+	const [tabType, tabLabel] = it;
 ```
 
 위 코드에서 보면 일단 it으로 한 요소를 `const [tabType,tabLabel]` 에 해당하도록 할당 해준다. 이를 `{ tabType , tabLabel }` 변수명으로 반환한다. 
@@ -297,7 +296,7 @@ const [tabType, tabLabel] = it;
 		getTab() 에 인자를 넘겨주지 않았는데 탭타입,탭라벨을 
 		받을 수 있는 이유는?
 
-getTab은 탭 타입과 탭 라벨 돔을 리턴한다. 
+	💡 Array.map(콜백 함수) 호출 시 메서드 내부에서 콜백 함수를 호출하고 파라미터를 주입한다. 주입되는 파라미터 :(현재 처리할 요소, 처리할 요소의 인덱스, 호출한 배열) 따라서 함수만 넘겨줘도 내부에서 호출하며, getTab 메서드 내부에서 주입되는 파라미터를 사용할 수있다. 
 
 
 
@@ -307,3 +306,110 @@ getTab은 탭 타입과 탭 라벨 돔을 리턴한다.
 - Object values()
 	특정 객체를 대상으로 value 값들만 뽑아서 배열로 반환.
 	for in 구문으로 반복한 결과와 동일하다. 
+
+
+
+--- 
+
+### 추천검색어 
+
+>❓  데이트 포맷 toLocaleString  공부하기 
+```JS
+ const formattedDate = date.toLocaleString("ko-KR", {
+
+ hour12: false,
+
+ dateStyle: "short",
+
+ timeStyle: "medium",
+
+ });
+
+```
+
+
+> ✅  자바스크립트 filter 함수로 값 filtering 하기
+```JS
+removeHistory(removeKeyword) {
+	this.storage.historyData = this.storage.historyData.filter(
+	(history) => history.keyword !== removeKeyword.keyword
+	);
+}
+```
+스토리지에 있는 히스토리 데이터 중에서 히스토리의 키워드가 삭제 키워드와 같지 않은 것들만 다시 히스토리 데이터로 지정하여 삭제기능 구현. 
+
+
+
+### ⭐ 최근 검색어
+추천검색어 `KeywordListView`  를 상속받아 `HistoryView` 만들기
+
+KeywordListView의 재사용하기 위해 생성자를 외부에서 주입받을 수있도록 코드를 변경한다. 
+
+```JS 
+export default class KeywordListView extends View {
+
+constructor(element = qs("#keyword-list-view"), template = new Template()) {
+
+super(element);
+
+this.template = template;
+
+}}
+```
+
+위와 같이 constructor의 인자로 element와 template 을 받을 수 있게 변경하고 초기값은 키워드리스트 뷰에 필요한 것으로 설정해준다. 
+
+```JS
+export default class HistoryListView extends KeywordListView {
+
+constructor() {
+
+super(qs("#history-list-view"), new Template());
+
+}
+```
+
+위와 같이  `KeywordListView`  를 상속받아 `HistoryView` 를 만들 수있다. super에 HistoryListView 에 맞는 element와 Template을 전달한다. 
+
+```JS
+bindEvents() {
+
+delegate(this.element, "click", "button.btn-remove", (e) =>
+
+this.handleClickRemoveBtn(e)
+
+);
+
+super.bindEvents();
+
+}
+
+```
+
+📌 Events 를 발행한 후에 상속받은 키워드 리스트 뷰의 바인드 이벤트를 호출해주는 것에 유의 
+
+> ✅ 검색어 추가할 때. 이미 저장되어있는 검색어인지 확인하기 some
+
+```JS
+addHistory(keyword) {
+
+if (!keyword) return;
+
+const hasHistory = this.storage.historyData.some(
+
+(history) => history.keyword === keyword
+
+);
+
+if (hasHistory) this.removeHistory(keyword);
+
+const date = new Date();
+
+this.storage.historyData.push({ keyword, date });
+
+}
+```
+
+some( ) - 특정 조건이 배열의 요소 중 하나라도 맞는 지 확인할 때 사용하는 함수
+배열의 요소 중 하나라도 특정 조건에 부합하는 경우 true, 부합하지 않으면 false를 리턴한다. 
+some을 사용하여 키워드가 있는지 확인한 후 있으면 remove 없으면 push 해준다. 

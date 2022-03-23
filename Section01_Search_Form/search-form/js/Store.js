@@ -17,6 +17,7 @@ export default class Store {
     this.searchResult = this.storage.productData.filter((it) =>
       it.name.includes(keyword)
     );
+    this.addHistory(keyword);
   }
 
   getKeywordList() {
@@ -25,12 +26,27 @@ export default class Store {
 
   getHistoryList() {
     console.log(this.storage.historyData);
-    return this.storage.historyData;
+    return this.storage.historyData.sort(this._sortHistory);
+  }
+
+  _sortHistory(history1, history2) {
+    return history2.date > history1.date;
   }
 
   removeHistory(removeKeyword) {
     this.storage.historyData = this.storage.historyData.filter(
-      (history) => history.keyword !== removeKeyword.keyword
+      (history) => history.keyword !== removeKeyword
     );
+  }
+
+  addHistory(keyword) {
+    console.log(keyword.trim());
+    if (!keyword) return;
+    const hasHistory = this.storage.historyData.some(
+      (history) => history.keyword === keyword
+    );
+    if (hasHistory) this.removeHistory(keyword);
+    const date = new Date();
+    this.storage.historyData.push({ keyword, date });
   }
 }

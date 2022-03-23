@@ -1,33 +1,27 @@
-import View from "./View.js";
-import { qs, on, delegate } from "../helpers.js";
+import KeywordListView from "./KeywordListView.js";
+import { qs, delegate, formatRelativeDate } from "../helpers.js";
 
-export default class HistoryView extends View {
+export default class HistoryListView extends KeywordListView {
   constructor() {
-    super(qs("#history-list-view"));
-    this.template = new Template();
-    this.bindEvents();
-  }
-  show(data = []) {
-    this.element.innerHTML =
-      data.length > 0
-        ? this.template.getList(data)
-        : this.template.getEmptyMessate();
-    super.show();
+    super(qs("#history-list-view"), new Template());
   }
 
   bindEvents() {
     delegate(this.element, "click", "button.btn-remove", (e) =>
       this.handleClickRemoveBtn(e)
     );
+    super.bindEvents();
   }
+
   handleClickRemoveBtn(e) {
-    const value = e.target.parentElement.dataset;
+    e.stopPropagation();
+    const value = e.target.parentElement.dataset.keyword;
     this.emit("@remove", { value });
   }
 }
 
 class Template {
-  getEmptyMessate() {
+  getEmptyMessage() {
     return `
     <div class="empty-box">
         최근 검색어가 없습니다.
@@ -38,15 +32,10 @@ class Template {
   }
 
   _getItem({ id, keyword, date }) {
-    const formattedDate = date.toLocaleString("ko-KR", {
-      hour12: false,
-      dateStyle: "short",
-      timeStyle: "medium",
-    });
     return `
      <li data-keyword="${keyword}">
         ${keyword}
-        <span class="date">${formattedDate}</span>
+        <span class="date">${formatRelativeDate(date)}</span>
          <button class="btn-remove"></button>
       </li>
    

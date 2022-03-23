@@ -32,9 +32,10 @@ export default class Controller {
       .on("@submit", (event) => this.search(event.detail.value))
       .on("@reset", () => this.reset());
     this.tabView.on("@change", (e) => this.change(e.detail.value));
-    this.historyListView.on("@remove", (e) =>
-      this.removeHistory(e.detail.value)
-    );
+    this.keywordListView.on("@click", (e) => this.search(e.detail.value));
+    this.historyListView
+      .on("@remove", (e) => this.removeHistory(e.detail.value))
+      .on("@click", (e) => this.search(e.detail.value));
   }
 
   search(keyword) {
@@ -45,7 +46,6 @@ export default class Controller {
 
   reset() {
     console.log(tag, "reset");
-
     this.store.searchKeyword = "";
     this.store.searchResult = [];
     this.render();

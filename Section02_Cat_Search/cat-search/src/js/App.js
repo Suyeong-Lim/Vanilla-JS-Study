@@ -6,15 +6,23 @@ import ImageInfo from "./components/ImageInfo.js";
 export default class App {
   $target = null;
   data = [];
+
   constructor($target) {
+    let keywords = [];
     console.log("App is created!");
     this.$target = $target;
-
     this.searchInput = new SearchInput({
       $target,
       onSearch: (keyword) => {
-        api.fetchCats(keyword).then(({ data }) => this.setState(data));
+        this.setState({
+          data: null,
+          loading: true,
+        });
+        api
+          .fetchCats(keyword)
+          .then(({ data }) => this.setState({ data, loading: false }));
       },
+      keywords,
     });
 
     this.searchResult = new SearchResult({
@@ -22,9 +30,17 @@ export default class App {
       initialData: this.data,
       onClick: (image) => {
         this.imageInfo.setState({
+          loading: true,
           visible: true,
           image,
         });
+        api.fetchCats(id).then(({ data }) =>
+          this.imageInfo.setState({
+            visible: true,
+            loading: false,
+            data,
+          })
+        );
       },
     });
 

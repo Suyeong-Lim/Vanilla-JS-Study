@@ -10,7 +10,15 @@
     "vanilla-framework": "^3.1.1"
   },
   "scripts": {
+    "lint": "eslint src/**/*.js",
+    "build": "babel src -d dist -w",
     "build-css": "sass -w --load-path=node_modules src/styles/scss:src/styles/css --style=compressed",
     "watch-css": "yarn build-css && sass --load-path=node_modules -w src/styles/scss:src/styles/css --style=compressed"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.17.6",
+    "@babel/core": "^7.17.8",
+    "@babel/polyfill": "^7.12.1",
+    "@babel/preset-env": "^7.16.11"
   }
 }
